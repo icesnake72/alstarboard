@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: alstarboard
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/alstarboard?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    username: root
+    password: 1234
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      pool-name: springHikariCP
+
+  messages:
+    encoding: UTF-8
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.example.alstarboard.domain
+  type-aliases-type:
+    User: com.example.alstarboard.domain.User
+    Board: com.example.alstarboard.domain.Board
+    Image: com.example.alstarboard.domain.Image
+    Reply: com.example.alstarboard.domain.Reply
+    UserMapper: com.example.alstarboard.repository.UserMapper
+    BoardMapper: com.example.alstarboard.repository.BoardMapper
+    ImageMapper: com.example.alstarboard.repository.ImageMapper
+    ReplyMapper: com.example.alstarboard.repository.ReplyMapper
+  configuration:
+    map-underscore-to-camel-case: true
+
+
+
+
+
+
+
+server:
+  port:8080
+
+logging:
+  level:
+    root: INFO
+    com.example.alstarboard: DEBUG
+  file: logs/alstarboard.log
+  pattern:
+      console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+      file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+
+
