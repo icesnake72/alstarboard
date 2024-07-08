@@ -1,11 +1,10 @@
 package com.example.alstarboard.controller;
 
-import com.example.alstarboard.dto.BoardRequest;
+import com.example.alstarboard.dto.BoardDTO;
 import com.example.alstarboard.entity.Board;
 import com.example.alstarboard.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +24,7 @@ public class BoardController {
     }
 
     @GetMapping("/page")
-    public Page<Board> getBoardsByPage(
+    public Page<BoardDTO> getBoardsByPage(
             @RequestParam int page,
             @RequestParam(defaultValue = "20") int pageSize) {
         return boardService.getBoardsByPage(page, pageSize);

@@ -1,6 +1,6 @@
 package com.example.alstarboard.service;
 
-import com.example.alstarboard.dto.BoardRequest;
+import com.example.alstarboard.dto.BoardDTO;
 import com.example.alstarboard.entity.Board;
 import com.example.alstarboard.entity.Image;
 import com.example.alstarboard.entity.User;
@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -34,9 +35,10 @@ public class BoardService {
     @Value("${image.access.url}")
     private String accessUrl;
 
-    public Page<Board> getBoardsByPage(int page, int pageSize) {
-        PageRequest pageRequest = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
-        return boardRepository.findAll(pageRequest);
+    @Transactional(readOnly = true)
+    public Page<BoardDTO> getBoardsByPage(int page, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(page, pageSize, Sort.by( "createdAt").descending());
+        return boardRepository.findAll(pageRequest).map(BoardDTO::fromEntity);
     }
 
     public Board saveBoard(Board board) {

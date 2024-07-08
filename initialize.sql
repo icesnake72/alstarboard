@@ -61,5 +61,7 @@ values('제목입니다', '이 부분은 내용입니다\n테스트할 내용입
 
 insert into images(`path`,`url`, `board`)
 values('static/images/test.webp', '/images/test.webp', 1);
+
 select * from users;
 select * from boards;
+select * from images;
