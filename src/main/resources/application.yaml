@@ -1,6 +1,9 @@
 spring:
   application:
     name: alstarboard
+  output:
+    ansi:
+      enabled: always
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -18,20 +21,36 @@ spring:
   messages:
     encoding: UTF-8
 
-mybatis:
-  mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: com.example.alstarboard.domain
-  type-aliases-type:
-    User: com.example.alstarboard.domain.User
-    Board: com.example.alstarboard.domain.Board
-    Image: com.example.alstarboard.domain.Image
-    Reply: com.example.alstarboard.domain.Reply
-    UserMapper: com.example.alstarboard.repository.UserMapper
-    BoardMapper: com.example.alstarboard.repository.BoardMapper
-    ImageMapper: com.example.alstarboard.repository.ImageMapper
-    ReplyMapper: com.example.alstarboard.repository.ReplyMapper
-  configuration:
-    map-underscore-to-camel-case: true
+  jpa:
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+image:
+  upload:
+    dir: src/main/resources/static/images
+  access:
+    url: /images
+#mybatis:
+#  mapper-locations: classpath:mapper/*.xml
+#  mapper-config-location: classpath:mybatis-config.xml
+#  type-aliases-package: com.example.alstarboard.domain
+#  type-aliases-type:
+#    User: com.example.alstarboard.entity.User
+#    Board: com.example.alstarboard.entity.Board
+#    Image: com.example.alstarboard.entity.Image
+#    Reply: com.example.alstarboard.entity.Reply
+#    UserMapper: com.example.alstarboard.repository.UserMapper
+#    BoardMapper: com.example.alstarboard.repository.BoardMapper
+#    ImageMapper: com.example.alstarboard.repository.ImageMapper
+#    ReplyMapper: com.example.alstarboard.repository.ReplyMapper
+#  configuration:
+#    map-underscore-to-camel-case: true
 
 
 

@@ -1,10 +1,11 @@
-package com.example.alstarboard.domain;
+package com.example.alstarboard.entity;
 
 import lombok.*;
 
 import java.sql.Timestamp;
 
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 @ToString
 @Setter
