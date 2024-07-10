@@ -6,8 +6,10 @@ import com.example.alstarboard.entity.Image;
 import com.example.alstarboard.entity.User;
 import com.example.alstarboard.repository.BoardRepository;
 import com.example.alstarboard.repository.UserRepository;
+import jakarta.servlet.ServletContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -28,7 +30,9 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final ServletContext servletContext;
 
+    // application.yaml 파일에서 설정한 값을 가져온다
     @Value("${image.upload.dir}")
     private String uploadDir;
 
@@ -38,6 +42,8 @@ public class BoardService {
     @Transactional(readOnly = true)
     public Page<BoardDTO> getBoardsByPage(int page, int pageSize) {
         PageRequest pageRequest = PageRequest.of(page, pageSize, Sort.by( "createdAt").descending());
+
+        // Entity -> DTO 변환, 왜? Entity가 기능이 많아서 무거우니까...
         return boardRepository.findAll(pageRequest).map(BoardDTO::fromEntity);
     }
 
@@ -50,8 +56,10 @@ public class BoardService {
     }
 
     public Board saveBoardWithImages(String title, String text, Long userId, List<MultipartFile> files) throws IOException {
+        // userId를 이용하여 user 테이블의 해당 사용자 정보를 가져온다
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new RuntimeException("User not found"));
+
 
         Board board = Board.builder()
             .title(title)
@@ -59,13 +67,22 @@ public class BoardService {
             .user(user)
             .build();
 
+        // 실제 경로 가져오기
+        File staticImagesDir = new ClassPathResource("static/images").getFile();
+        String realPath = staticImagesDir.getAbsolutePath();
+
         List<Image> images = new ArrayList<>();
         for (MultipartFile file : files) {
             String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-            String filePath = uploadDir + File.separator + fileName;
+            String filePath = realPath + File.separator + fileName;
             String fileUrl = accessUrl + "/" + fileName;
 
+            System.out.println(filePath);
+
             File dest = new File(filePath);
+            if(!dest.getParentFile().exists()) {
+                dest.getParentFile().mkdirs();
+            }
             file.transferTo(dest);
 
             images.add(Image.builder()
@@ -74,6 +91,7 @@ public class BoardService {
                 .board(board)
                 .build());
         }
+        // Board와 Image의 관계 설정, board에 이미지 리스트를 저장
         board.setImages(images);
 
         return boardRepository.save(board);

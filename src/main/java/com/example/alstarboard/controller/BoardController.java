@@ -4,6 +4,7 @@ import com.example.alstarboard.dto.BoardDTO;
 import com.example.alstarboard.entity.Board;
 import com.example.alstarboard.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,7 @@ public class BoardController {
         return "board";
     }
 
+    // 127.0.0.1:8080/api/board/page?page=0&pageSize=10
     @GetMapping("/page")
     public Page<BoardDTO> getBoardsByPage(
             @RequestParam int page,
@@ -36,6 +38,10 @@ public class BoardController {
         @RequestParam("text") String text,
         @RequestParam("userId") Long userId,
         @RequestParam("files") List<MultipartFile> files) throws IOException {
+        System.out.println("title = " + title);
+        System.out.println("text = " + text);
+        System.out.println("userId = " + userId);
+        files.forEach(file -> System.out.println("file = " + file.getOriginalFilename()));
         return boardService.saveBoardWithImages(title, text, userId, files);
     }
 

@@ -17,25 +17,25 @@ import org.hibernate.annotations.CreationTimestamp;
 @Table(name = "boards")
 public class Board {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment, key 생성 전략
     private Long id;
 
     @Column(nullable = false, length = 100)
-    private String title;
+    private String title;   // not null, 길이 100, varchar(100)
 
     @Column(nullable = false, length = 300)
     private String text;
 
     @Builder.Default
-    @Column(name = "`like`")
-    private Long like = 0L;
+    @Column(name = "`like`")    // like는 예약어이므로 ``로 감싸줌, name으로 컬럼명을 `like`로 지정
+    private Long like = 0L;     // default 0
 
     @Builder.Default
     @Column(name = "`unlike`")
     private Long unlike = 0L;
 
     @ManyToOne
-    @JoinColumn(name = "`user`")
+    @JoinColumn(name = "`user`")    // board테이블의 컬럼명 user, 외래키
     @ToString.Exclude
     private User user; // User 테이블의 외래 키
 

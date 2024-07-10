@@ -4,9 +4,9 @@ spring:
   output:
     ansi:
       enabled: always
-  http:
+  servlet:
     encoding:
-      charset: UTF-8
+      charset: UTF-8    # 한글 깨짐 방지
       enabled: true
       force: true
       force-request: true
@@ -16,6 +16,7 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/alstarboard?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
     username: root
     password: 1234
+    # HikariCP 설정, 데이터베이스 커넥션 캐싱
     hikari:
       maximum-pool-size: 10
       minimum-idle: 5
@@ -29,7 +30,7 @@ spring:
 
   jpa:
     open-in-view: false
-    show-sql: true
+    show-sql: true    # 콘솔에 SQL 출력
     hibernate:
       ddl-auto: update
     properties:
@@ -39,9 +40,9 @@ spring:
 
 image:
   upload:
-    dir: src/main/resources/static/images
+    dir: /static/images #src/main/resources/static/images
   access:
-    url: /images
+    url: /images/
 #mybatis:
 #  mapper-locations: classpath:mapper/*.xml
 #  mapper-config-location: classpath:mybatis-config.xml

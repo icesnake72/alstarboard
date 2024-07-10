@@ -36,7 +36,7 @@ id bigint unsigned not null auto_increment,
 `created_at` timestamp default current_timestamp,
 `updated_at` timestamp default current_timestamp,
 constraint primary key(id),
-constraint foreign key(`boards`) references `boards`(id)
+constraint foreign key(`board`) references `boards`(id)
 );
 
 
