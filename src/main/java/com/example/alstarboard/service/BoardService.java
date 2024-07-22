@@ -1,6 +1,7 @@
 package com.example.alstarboard.service;
 
 import com.example.alstarboard.dto.BoardDTO;
+import com.example.alstarboard.dto.request.BoardRequest;
 import com.example.alstarboard.entity.Board;
 import com.example.alstarboard.entity.Image;
 import com.example.alstarboard.entity.User;
@@ -51,10 +52,56 @@ public class BoardService {
         return boardRepository.save(board);
     }
 
+    @Transactional(readOnly = true)
     public Optional<Board> findById(Long id) {
         return boardRepository.findById(id);
     }
 
+    @Transactional
+    public Board saveBoardWithImages(BoardRequest board) throws IOException {
+        // userId를 이용하여 user 테이블의 해당 사용자 정보를 가져온다
+        User user = userRepository.findById(board.getUserId())
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // BoardRequest instance를 이용하여 Board instance를 생성한다
+        Board newBoard = Board.builder()
+            .title(board.getTitle())
+            .text(board.getText())
+            .user(user)
+            .build();
+
+        // 실제 경로 가져오기
+        File staticImagesDir = new ClassPathResource("static/images").getFile();
+        String realPath = staticImagesDir.getAbsolutePath();
+
+        List<Image> images = new ArrayList<>();
+        for (MultipartFile file : board.getFiles()) {
+            String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+            String filePath = realPath + File.separator + fileName;
+            String fileUrl = accessUrl + "/" + fileName;
+
+            // logging
+            System.out.println(filePath);
+
+            File dest = new File(filePath);
+            if(!dest.getParentFile().exists()) {
+                dest.getParentFile().mkdirs();
+            }
+            file.transferTo(dest);
+
+            images.add(Image.builder()
+                .url(fileUrl)
+                .path(filePath)
+                .board(newBoard)
+                .build());
+        }
+        // Board와 Image의 관계 설정, board에 이미지 리스트를 저장
+        newBoard.setImages(images);
+
+        return boardRepository.save(newBoard);
+    }
+
+    @Transactional
     public Board saveBoardWithImages(String title, String text, Long userId, List<MultipartFile> files) throws IOException {
         // userId를 이용하여 user 테이블의 해당 사용자 정보를 가져온다
         User user = userRepository.findById(userId)
@@ -97,6 +144,7 @@ public class BoardService {
         return boardRepository.save(board);
     }
 
+    @Transactional
     public void deleteBoard(Long boardId) {
         Board board = boardRepository.findById(boardId)
             .orElseThrow(() -> new RuntimeException("Board not found"));
@@ -113,6 +161,7 @@ public class BoardService {
         boardRepository.delete(board);
     }
 
+    @Transactional
     public Board updateLike(Long boardId, int value) {
         Board board = boardRepository.findById(boardId)
             .orElseThrow(() -> new RuntimeException("Board not found"));
@@ -120,6 +169,7 @@ public class BoardService {
         return boardRepository.save(board); // save() 메서드가 update 로 작동함
     }
 
+    @Transactional
     public Board updateUnlike(Long boardId, int value) {
         Board board = boardRepository.findById(boardId)
             .orElseThrow(() -> new RuntimeException("Board not found"));

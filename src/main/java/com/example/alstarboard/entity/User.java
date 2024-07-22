@@ -1,5 +1,6 @@
 package com.example.alstarboard.entity;
 
+import com.example.alstarboard.dto.UserDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -37,13 +38,12 @@ public class User {
     @Column(nullable = false)
     @CreationTimestamp
     private Timestamp updatedAt;
-}
 
-/*
-'id', 'bigint unsigned', 'NO', 'PRI', NULL, 'auto_increment'
-'user_email', 'varchar(300)', 'NO', 'UNI', NULL, ''
-'password', 'varchar(20)', 'YES', '', NULL, ''
-'nick_name', 'varchar(50)', 'NO', '', NULL, ''
-'created_at', 'timestamp', 'YES', '', 'CURRENT_TIMESTAMP', 'DEFAULT_GENERATED'
-'updated_at', 'timestamp', 'YES', '', 'CURRENT_TIMESTAMP', 'DEFAULT_GENERATED'
-* */
+    public static User fromUserDTO(UserDTO userDTO) {
+        return User.builder()
+                .id(userDTO.getUserId())
+                .userEmail(userDTO.getUserEmail())
+                .nickName(userDTO.getUserNickname())
+                .build();
+    }
+}

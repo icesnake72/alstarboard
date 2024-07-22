@@ -1,16 +1,19 @@
+
 spring:
   application:
     name: alstarboard
   output:
     ansi:
-      enabled: always
+      enabled: ALWAYS
+  devtools:
+    livereload:
+      enabled: true
   servlet:
     encoding:
       charset: UTF-8    # 한글 깨짐 방지
       enabled: true
       force: true
       force-request: true
-
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/alstarboard?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
@@ -24,10 +27,8 @@ spring:
       idle-timeout: 600000
       max-lifetime: 1800000
       pool-name: springHikariCP
-
   messages:
     encoding: UTF-8
-
   jpa:
     open-in-view: false
     show-sql: true    # 콘솔에 SQL 출력

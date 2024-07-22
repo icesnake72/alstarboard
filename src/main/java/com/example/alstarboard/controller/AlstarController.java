@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class AlstarController {
 
     @GetMapping
-    @ResponseBody
     public String index() {
-        return "index";
+        return "index.html";
     }
-
 }

@@ -39,6 +39,11 @@ public class Board {
     @ToString.Exclude
     private User user; // User 테이블의 외래 키
 
+    @ManyToOne
+    @JoinColumn(name = "category")
+    @ToString.Exclude
+    private Category category;
+
     @Column(nullable = false)
     @CreationTimestamp
     private Timestamp createdAt;
