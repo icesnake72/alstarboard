@@ -176,4 +176,11 @@ public class BoardService {
         board.setUnlike(board.getUnlike() + value);
         return boardRepository.save(board); // save() 메서드가 update 로 작동함
     }
+
+    @Transactional(readOnly = true)
+    public Page<BoardDTO> search(String title, String text, int page, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(page, pageSize, Sort.by( "createdAt").descending());
+
+        return boardRepository.findByTitleContainingOrTextContaining(title, text, pageRequest).map(BoardDTO::fromEntity);
+    }
 }

@@ -73,6 +73,24 @@ public class BoardController {
         }
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<Page<BoardDTO>> search(@RequestParam String title,
+                                                 @RequestParam String text,
+                                                 @RequestParam(defaultValue = "0") int page,
+                                                 @RequestParam(defaultValue = "20") int pageSize) {
+        if (title.isEmpty() && text.isEmpty()) {
+            ResponseEntity.badRequest().build();
+        }
+
+        Page<BoardDTO> pageBoard = boardService.search(title, text, page, pageSize);
+        if ( pageBoard!=null ) {
+            return ResponseEntity.ok(pageBoard);
+        }
+
+        return ResponseEntity.internalServerError().build();
+    }
+
+
     @DeleteMapping("/{boardId}")
     public ResponseEntity<String> deleteBoard(@PathVariable Long boardId) {
         boardService.deleteBoard(boardId);

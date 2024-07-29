@@ -1,6 +1,7 @@
 package com.example.alstarboard.service;
 
 import com.example.alstarboard.dto.UserDTO;
+import com.example.alstarboard.dto.request.UserRequest;
 import com.example.alstarboard.entity.User;
 import com.example.alstarboard.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -57,5 +58,11 @@ public class UserService {
     return users.stream()
         .map(UserDTO::of)
         .collect(Collectors.toList());
+  }
+
+  public Optional<UserDTO> login(UserRequest userRequest) {
+    return userRepository.findByUserEmailAndPassword(userRequest.getUserEmail(),
+        userRequest.getPassword())
+        .map(UserDTO::of);
   }
 }
